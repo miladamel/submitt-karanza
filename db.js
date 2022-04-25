@@ -1,16 +1,22 @@
-const mongoose = require("mongoose");
+const mysql = require("mysql");
+const dotenv = require("dotenv");
+dotenv.config({ path: "./.env" });
 
+const db = mysql.createConnection({
+  host: process.env.HOST,
+  user: process.env.DATABASE_USER,
+  password: process.env.PASSWORD,
+  database: process.env.DATABASE,
+});
 
-module.exports = () => {
-	const connectionParams = {
-		useNewUrlParser: true,
-		useUnifiedTopology: true,
-	};
-	try {
-		mongoose.connect('mongodb://localhost:27017/myapp', connectionParams);
-		console.log("Connected to database successfully");
-	} catch (error) {
-		console.log(error);
-		console.log("Could not connect database!");
-	}
+db.connect((error, result) => {
+  if (error) {
+    console.log("mysql connection failed");
+  } else {
+    console.log("mysql connected");
+  }
+});
+
+module.exports = {
+  db,
 };
